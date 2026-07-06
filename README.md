@@ -1,2 +1,2 @@
 # backend-ledger
-A real world example of banking system involving ledger for transactions and rola based authentication system, RBAC
+A real world example of banking system involving ledger for transactions and role based authentication system (RBAC).

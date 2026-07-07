@@ -1,5 +1,5 @@
-const mongoose = require("monogoose");
-const bcrypt = require("bcryptjs")
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
@@ -30,10 +30,11 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-userSchema.pre("save", async function(next){  // we are hashing here instead of controller to secure 
-// the password before saving it to the database.
-//  This is a middleware that runs before saving a user document.
-                /* User.create()
+userSchema.pre("save", async function (next) {
+  // we are hashing here instead of controller to secure
+  // the password before saving it to the database.
+  //  This is a middleware that runs before saving a user document.
+  /* User.create()
 
                 ↓
 
@@ -42,17 +43,20 @@ userSchema.pre("save", async function(next){  // we are hashing here instead of 
                 ↓
 
                 Database */
-    if(!this.isModified("password")){ // it is passed as string to check the field named "password" is modified or not. 
+  if (!this.isModified("password")) {
+    // it is passed as string to check the field named "password" is modified or not.
     // If it is not modified then we will not hash it again.
-        return next()
-    }
-    const hash = await bcrypt.hash(this.password,10)
-    this.password = hash
-    return next()
-})
+    return 
+  }
+  const hash = await bcrypt.hash(this.password, 10);
+  this.password = hash;
+});
 
-userSchema.methods.comparePassword = async function(password) { // ye method userSchema ke instance pe call hoga.
-    // like user.comparePassword(password) where user is an instance of the User model.
-    // reduncant code hatane ke liye humne is method ko schema me define kiya h.
-    return await bcrypt.compare(password, this.password)
-}
+userSchema.methods.comparePassword = async function (password) {
+  // ye method userSchema ke instance pe call hoga.
+  // like user.comparePassword(password) where user is an instance of the User model.
+  // reduncant code hatane ke liye humne is method ko schema me define kiya h.
+  return await bcrypt.compare(password, this.password);
+};
+
+module.exports = mongoose.model("user", userSchema);

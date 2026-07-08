@@ -22,7 +22,7 @@ async function userRegisterController(req, res) {
       password,
     });
     console.log("User", User);
-    const token = await jwt.sign({ id: User._id },process.env.JWT_SECRET);
+    const token = await jwt.sign({ id: User._id }, process.env.JWT_SECRET);
     res.cookie("token", token);
     res.status(201).json({
       message: "User registered successfully",
@@ -33,8 +33,40 @@ async function userRegisterController(req, res) {
     });
   } catch (err) {
     console.log("Error creating user", err);
-    res.sned("error creating user")
+    res.sned("error creating user");
   }
 }
 
-module.exports = { userRegisterController };
+async function userLoginController(req, res) {
+  console.log(req.body);
+  const { email, password } = req.body;
+
+  const User = await userModel.findOne({ email }).select("+password");
+  console.log("User", User);
+  if (!User) {
+    return res.status(401).json({
+      message: "Invalid email or password",
+    });
+  }
+  // const hashedPassword = bcrypt.hash(password,10)
+  // const checkPassword = await userModel.findOne({email, hashedPassword})
+  // if(!checkPassword){
+  //   return res.status(401).json({
+  //     message: "Invalid Email or password"
+  //   })
+  // }
+  const result = await User.comparePassword(password);
+  console.log("result", result);
+  if (!result) {
+    return res.status(401).json({
+      message: "Invalid email or password",
+    });
+  }
+  const token = await jwt.sign({ email }, process.env.JWT_SECRET);
+  res.cookie("token", token);
+  res.status(201).json({
+    message: "User logged in successfully"
+  })
+}
+
+module.exports = { userRegisterController, userLoginController };

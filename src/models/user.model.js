@@ -56,6 +56,8 @@ userSchema.methods.comparePassword = async function (password) {
   // ye method userSchema ke instance pe call hoga.
   // like user.comparePassword(password) where user is an instance of the User model.
   // reduncant code hatane ke liye humne is method ko schema me define kiya h.
+  console.log("this",this)
+  console.log(this.password)
   return await bcrypt.compare(password, this.password);
 };
 

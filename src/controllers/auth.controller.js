@@ -1,11 +1,14 @@
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
+const emailService = require("../services/mail.service")
 
 /**
  * user register controller // JS docstring
  * POST /api/auth/register
  */
-
+console.log(process.env.CLIENT_ID);
+console.log(process.env.CLIENT_SECRET?.substring(0, 10));
+console.log(process.env.EMAIL_USER);
 async function userRegisterController(req, res) {
   const { email, name, password } = req.body;
 
@@ -31,6 +34,7 @@ async function userRegisterController(req, res) {
         name,
       },
     });
+    await emailService.sendRegistrationEmail(User.email,User.name)
   } catch (err) {
     console.log("Error creating user", err);
     res.sned("error creating user");

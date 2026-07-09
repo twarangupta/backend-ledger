@@ -37,7 +37,7 @@ async function userRegisterController(req, res) {
     await emailService.sendRegistrationEmail(User.email,User.name)
   } catch (err) {
     console.log("Error creating user", err);
-    res.sned("error creating user");
+    res.send("error creating user");
   }
 }
 
